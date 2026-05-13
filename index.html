@@ -1,0 +1,1567 @@
+<!--
+BRITPONG WORDPRESS EMBED
+-->
+<div id="britpong-game" class="britpong-app" tabindex="0" aria-label="Britpong game"></div>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+#britpong-game {
+  --tt-black: #020305;
+  --tt-blue: #0500a8;
+  --tt-dark-blue: #010066;
+  --tt-white: #f5f5ff;
+  --tt-yellow: #fff300;
+  --tt-cyan: #00ffff;
+  --tt-green: #00ff4a;
+  --tt-magenta: #ff49ff;
+  --tt-red: #ff3030;
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: transparent;
+  color: var(--tt-white);
+  font-family: 'VT323', 'Courier New', monospace;
+  letter-spacing: .035em;
+  image-rendering: pixelated;
+  box-sizing: border-box;
+}
+
+#britpong-game,
+#britpong-game * {
+  box-sizing: border-box;
+}
+
+#britpong-game button {
+  touch-action: manipulation;
+}
+
+#britpong-game .britpong-shell {
+  position: relative;
+  width: min(94vw, calc(100svh * 1.24), 960px);
+  aspect-ratio: 4 / 3;
+  padding: clamp(8px, 1.2vw, 14px);
+  border-radius: 26px;
+  background:
+    linear-gradient(145deg, #2d2d31, #09090d 50%, #34343a),
+    #111;
+  box-shadow:
+    0 26px 70px rgba(0,0,0,.65),
+    inset 0 0 0 4px #07070a,
+    inset 0 0 0 8px #292930;
+  overflow: hidden;
+}
+
+#britpong-game .teletext-screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 6.2% 11.6% 1fr 6.4%;
+  gap: .8%;
+  padding: clamp(10px, 1.35vw, 18px);
+  border-radius: 15px;
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(255,255,255,.035) 50%, rgba(0,0,0,.06) 50%) 0 0 / 100% 4px,
+    radial-gradient(circle at 50% 45%, rgba(0, 62, 255, .16), transparent 60%),
+    var(--tt-black);
+  box-shadow:
+    inset 0 0 0 3px #000,
+    inset 0 0 55px rgba(0, 80, 255, .28);
+  text-shadow: 0 0 3px currentColor;
+}
+
+#britpong-game .crt-glass {
+  position: absolute;
+  inset: 12px;
+  border-radius: 18px;
+  pointer-events: none;
+  z-index: 10;
+  background: radial-gradient(circle at 50% 35%, rgba(255,255,255,.15), transparent 16%, transparent 58%, rgba(0,0,0,.16));
+  mix-blend-mode: screen;
+  opacity: .32;
+}
+
+#britpong-game .status-row,
+#britpong-game .nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 0;
+  font-size: clamp(17px, 2.3vw, 28px);
+  line-height: .9;
+  color: var(--tt-white);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+#britpong-game .status-row span { min-width: 0; }
+
+#britpong-game .nav-row {
+  justify-content: center;
+  gap: clamp(12px, 2.2vw, 26px);
+  color: var(--tt-yellow);
+  background: var(--tt-blue);
+  padding: 2px 8px 0;
+  text-align: center;
+}
+
+#britpong-game .brand-row {
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  gap: clamp(5px, .8vw, 10px);
+  background: var(--tt-blue);
+  padding: 0 clamp(7px, 1vw, 12px);
+  overflow: hidden;
+}
+
+#britpong-game .bbc-box {
+  flex: 0 0 auto;
+  display: inline-grid;
+  place-items: center;
+  width: clamp(31px, 4.8vw, 56px);
+  height: clamp(27px, 4.2vw, 47px);
+  border: clamp(2px, .45vw, 4px) solid var(--tt-white);
+  color: var(--tt-white);
+  font-size: clamp(25px, 4.1vw, 50px);
+  line-height: .76;
+}
+
+#britpong-game .brand-title {
+  flex: 1;
+  min-width: 0;
+  color: var(--tt-yellow);
+  font-size: clamp(38px, 6.5vw, 76px);
+  line-height: .76;
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+#britpong-game .content-window {
+  min-height: 0;
+  overflow: hidden;
+  border-top: 5px solid var(--tt-black);
+  border-bottom: 5px solid var(--tt-black);
+}
+
+#britpong-game .tt-white { color: var(--tt-white); }
+#britpong-game .tt-yellow { color: var(--tt-yellow); }
+#britpong-game .tt-cyan { color: var(--tt-cyan); }
+#britpong-game .tt-green { color: var(--tt-green); }
+#britpong-game .tt-magenta { color: var(--tt-magenta); }
+#britpong-game .tt-red { color: var(--tt-red); }
+
+#britpong-game .blink { animation: bpBlink 1s steps(1) infinite; }
+@keyframes bpBlink { 50% { opacity: .08; } }
+
+#britpong-game .ceefax-h1 {
+  margin: 0;
+  font-size: clamp(34px, 5.7vw, 68px);
+  line-height: .78;
+  text-align: center;
+  white-space: nowrap;
+}
+
+#britpong-game .page-kicker {
+  text-align: center;
+  font-size: clamp(19px, 2.7vw, 32px);
+  line-height: .92;
+  margin: 0;
+  white-space: nowrap;
+}
+
+#britpong-game .boot-grid,
+#britpong-game .start-page,
+#britpong-game .draw-page,
+#britpong-game .rules-page,
+#britpong-game .result-page,
+#britpong-game .match-page {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+#britpong-game .boot-grid {
+  align-items: center;
+  justify-content: center;
+  gap: clamp(7px, 1.1vw, 13px);
+  padding: 1% 0;
+}
+
+#britpong-game .huge-logo {
+  font-size: clamp(54px, 8.8vw, 104px);
+  line-height: .72;
+  background: var(--tt-blue);
+  width: min(88%, 690px);
+  text-align: center;
+  padding: 7px 12px 10px;
+  overflow: hidden;
+}
+
+#britpong-game .line-block {
+  font-size: clamp(24px, 3.5vw, 42px);
+  line-height: .85;
+  text-align: center;
+}
+
+#britpong-game .boot-copy {
+  margin: 0 auto;
+  color: var(--tt-cyan);
+  font: inherit;
+  font-size: clamp(16px, 2.25vw, 27px);
+  line-height: .96;
+  white-space: pre-wrap;
+  text-align: left;
+  width: fit-content;
+  max-width: 94%;
+  min-height: calc(7em * .96);
+  overflow: hidden;
+}
+
+#britpong-game .terminal-cursor {
+  color: var(--tt-yellow);
+  animation: bpBlink 1s steps(1) infinite;
+}
+
+#britpong-game .boot-wait { visibility: hidden; }
+
+#britpong-game .start-page {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto auto auto;
+  gap: clamp(6px, .9vw, 10px);
+  padding: .5% 0 1%;
+}
+
+#britpong-game .band-carousel {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(6px, .8vw, 10px);
+  align-items: stretch;
+}
+
+#britpong-game .band-card {
+  min-width: 0;
+  min-height: 0;
+  appearance: none;
+  border: 0;
+  background: #000;
+  color: var(--tt-white);
+  font-family: inherit;
+  text-align: center;
+  padding: clamp(7px, .9vw, 11px) 5px;
+  box-shadow: inset 0 0 0 4px var(--tt-blue);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+#britpong-game .band-card.is-selected {
+  background: var(--tt-blue);
+  box-shadow: inset 0 0 0 4px var(--tt-yellow), 0 0 0 4px #000;
+}
+
+#britpong-game .band-name,
+#britpong-game .band-town,
+#britpong-game .band-short {
+  display: block;
+  line-height: .88;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#britpong-game .band-name { font-size: clamp(28px, 4vw, 48px); }
+#britpong-game .band-town { font-size: clamp(13px, 1.7vw, 21px); color: var(--tt-white); white-space: nowrap; }
+#britpong-game .band-short { font-size: clamp(13px, 1.55vw, 19px); color: var(--tt-cyan); white-space: nowrap; }
+
+#britpong-game .selected-strip {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  gap: clamp(8px, 1.2vw, 15px);
+  align-items: center;
+  background: #000;
+  border-top: 4px solid var(--tt-green);
+  border-bottom: 4px solid var(--tt-green);
+  padding: 4px 9px;
+  font-size: clamp(18px, 2.55vw, 31px);
+  line-height: .88;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+#britpong-game .selected-strip span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#britpong-game .button-row,
+#britpong-game .mobile-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(9px, 1.2vw, 15px);
+  min-height: 0;
+}
+
+#britpong-game .tele-button {
+  appearance: none;
+  border: 0;
+  color: #000;
+  font-family: inherit;
+  font-size: clamp(20px, 2.75vw, 33px);
+  line-height: .8;
+  padding: clamp(8px, 1.05vw, 12px) clamp(14px, 1.8vw, 22px);
+  cursor: pointer;
+  box-shadow: 5px 5px 0 #000, inset 0 0 0 4px rgba(0,0,0,.45);
+  white-space: nowrap;
+}
+
+#britpong-game .tele-button.yellow { background: var(--tt-yellow); }
+#britpong-game .tele-button.cyan { background: var(--tt-cyan); }
+#britpong-game .tele-button.wide { min-width: min(100%, 360px); }
+
+#britpong-game .mobile-hint {
+  text-align: center;
+  font-size: clamp(15px, 1.9vw, 23px);
+  line-height: .9;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#britpong-game .draw-page {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  gap: clamp(6px, .9vw, 10px);
+  padding: .5% 0 1%;
+}
+
+#britpong-game .draw-stage {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+  align-items: stretch;
+  gap: clamp(10px, 1.6vw, 20px);
+}
+
+#britpong-game .draw-bowl {
+  position: relative;
+  min-height: 0;
+  height: 100%;
+  border: 5px solid var(--tt-cyan);
+  background:
+    radial-gradient(circle at 50% 50%, rgba(0,255,255,.14), transparent 42%),
+    repeating-linear-gradient(90deg, #000 0 14px, rgba(0,255,255,.08) 14px 20px);
+  overflow: hidden;
+}
+
+#britpong-game .draw-bowl::before {
+  content: "DRAW MACHINE";
+  position: absolute;
+  left: 10px;
+  top: 8px;
+  color: var(--tt-green);
+  font-size: clamp(16px, 2vw, 24px);
+  line-height: .9;
+  z-index: 4;
+}
+
+#britpong-game .draw-bowl::after {
+  content: "";
+  position: absolute;
+  width: 72%;
+  aspect-ratio: 1;
+  left: 50%;
+  top: 54%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 5px dotted rgba(0,255,255,.7);
+  box-shadow:
+    inset 0 0 0 8px rgba(0,0,0,.4),
+    inset 0 0 0 18px rgba(255,243,0,.08),
+    0 0 0 6px rgba(0,0,0,.5);
+  opacity: 0;
+  z-index: 1;
+}
+
+#britpong-game .draw-bowl:not(.is-complete)::after {
+  opacity: 1;
+  animation: bpWasherDrum .52s steps(6) infinite;
+}
+
+#britpong-game .draw-ball {
+  position: absolute;
+  width: clamp(42px, 6.3vw, 68px);
+  height: clamp(42px, 6.3vw, 68px);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--tt-yellow);
+  color: #000;
+  font-size: clamp(30px, 4.4vw, 50px);
+  line-height: .8;
+  box-shadow: inset -8px -8px 0 rgba(0,0,0,.28), 0 0 0 5px #000;
+  z-index: 3;
+}
+
+#britpong-game .ball-0 { left: 13%; top: 42%; }
+#britpong-game .ball-1 { left: 41%; top: 26%; background: var(--tt-cyan); }
+#britpong-game .ball-2 { left: 61%; top: 56%; background: var(--tt-green); }
+
+#britpong-game .ball-0.shake { animation: bpWashBallOne .82s steps(8) infinite; }
+#britpong-game .ball-1.shake { animation: bpWashBallTwo .68s steps(8) infinite; }
+#britpong-game .ball-2.shake { animation: bpWashBallThree .76s steps(8) infinite; }
+
+@keyframes bpWasherDrum {
+  0% { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+  50% { transform: translate(-50%, -50%) rotate(180deg) scale(1.04); }
+  100% { transform: translate(-50%, -50%) rotate(360deg) scale(1); }
+}
+
+@keyframes bpWashBallOne {
+  0% { left: 14%; top: 57%; transform: rotate(0deg) scale(1); }
+  12% { left: 24%; top: 31%; transform: rotate(45deg) scale(1.06); }
+  25% { left: 50%; top: 19%; transform: rotate(100deg) scale(.94); }
+  38% { left: 72%; top: 34%; transform: rotate(160deg) scale(1.08); }
+  50% { left: 78%; top: 60%; transform: rotate(210deg) scale(.98); }
+  63% { left: 58%; top: 73%; transform: rotate(270deg) scale(1.05); }
+  78% { left: 29%; top: 70%; transform: rotate(320deg) scale(.95); }
+  100% { left: 14%; top: 57%; transform: rotate(360deg) scale(1); }
+}
+
+@keyframes bpWashBallTwo {
+  0% { left: 68%; top: 28%; transform: rotate(0deg) scale(.95); }
+  14% { left: 79%; top: 52%; transform: rotate(60deg) scale(1.08); }
+  29% { left: 61%; top: 72%; transform: rotate(125deg) scale(1); }
+  44% { left: 33%; top: 69%; transform: rotate(180deg) scale(.92); }
+  58% { left: 18%; top: 47%; transform: rotate(235deg) scale(1.06); }
+  72% { left: 28%; top: 24%; transform: rotate(295deg) scale(.96); }
+  86% { left: 52%; top: 18%; transform: rotate(335deg) scale(1.05); }
+  100% { left: 68%; top: 28%; transform: rotate(360deg) scale(.95); }
+}
+
+@keyframes bpWashBallThree {
+  0% { left: 36%; top: 22%; transform: rotate(0deg) scale(1.05); }
+  13% { left: 61%; top: 19%; transform: rotate(55deg) scale(.94); }
+  26% { left: 80%; top: 41%; transform: rotate(115deg) scale(1.06); }
+  39% { left: 72%; top: 67%; transform: rotate(175deg) scale(.98); }
+  52% { left: 45%; top: 75%; transform: rotate(230deg) scale(1.08); }
+  67% { left: 20%; top: 61%; transform: rotate(285deg) scale(.93); }
+  82% { left: 17%; top: 34%; transform: rotate(335deg) scale(1.03); }
+  100% { left: 36%; top: 22%; transform: rotate(360deg) scale(1.05); }
+}
+
+#britpong-game .draw-lines {
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: 1fr auto 1fr;
+  align-items: center;
+  font-size: clamp(26px, 3.8vw, 46px);
+  line-height: .82;
+  overflow: hidden;
+}
+
+#britpong-game .draw-lines div:not(.versus) {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 4px;
+  background: #000;
+  padding: 8px 12px;
+  border-left: 8px solid var(--tt-blue);
+  overflow: hidden;
+}
+
+#britpong-game .draw-lines span {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#britpong-game .versus {
+  text-align: center;
+  font-size: clamp(40px, 6vw, 70px);
+  line-height: .76;
+}
+
+#britpong-game .draw-ticker {
+  min-height: 0;
+  background: var(--tt-blue);
+  color: var(--tt-yellow);
+  font-size: clamp(19px, 2.55vw, 30px);
+  line-height: .88;
+  text-align: center;
+  padding: 6px 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#britpong-game .draw-ticker.is-ready {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-rows: auto auto;
+  align-items: center;
+  gap: 5px clamp(8px, 1.2vw, 14px);
+  white-space: normal;
+  text-overflow: clip;
+  background: #000;
+  border-top: 4px solid var(--tt-green);
+  border-bottom: 4px solid var(--tt-green);
+}
+
+#britpong-game .draw-ticker.is-ready strong {
+  min-width: 0;
+  font-weight: normal;
+  font-size: clamp(24px, 3.5vw, 42px);
+  line-height: .78;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#britpong-game .draw-ticker.is-ready > span:last-child {
+  grid-column: 1 / -1;
+  font-size: clamp(17px, 2.25vw, 26px);
+  line-height: .85;
+}
+
+#britpong-game .draw-start-button {
+  font-size: clamp(18px, 2.35vw, 28px);
+  padding: 7px 12px;
+  box-shadow: 4px 4px 0 var(--tt-blue), inset 0 0 0 4px rgba(0,0,0,.45);
+}
+
+#britpong-game .draw-bowl.is-complete .draw-ball { animation: none; }
+#britpong-game .draw-bowl.is-complete::after { display: none; }
+
+#britpong-game .rules-page {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: clamp(7px, 1vw, 12px);
+  padding: .8% 0 1%;
+}
+
+#britpong-game .rule-grid {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(7px, .9vw, 10px);
+}
+
+#britpong-game .rule-panel {
+  min-width: 0;
+  min-height: 0;
+  background: #000;
+  box-shadow: inset 0 0 0 4px var(--tt-blue);
+  padding: clamp(7px, .9vw, 10px);
+  overflow: hidden;
+}
+
+#britpong-game .rule-panel h2 {
+  margin: 0 0 4px;
+  font-size: clamp(23px, 3vw, 36px);
+  line-height: .8;
+  white-space: nowrap;
+}
+
+#britpong-game .rule-panel p {
+  margin: 0;
+  font-size: clamp(17px, 2.05vw, 25px);
+  line-height: .9;
+}
+
+#britpong-game .match-page {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  gap: 6px;
+}
+
+#britpong-game .score-strip {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto auto minmax(0, 1fr);
+  gap: clamp(6px, .9vw, 12px);
+  align-items: center;
+  text-align: center;
+  font-size: clamp(18px, 2.65vw, 32px);
+  line-height: .82;
+  background: #000;
+  padding: 5px 8px;
+  border-bottom: 4px solid var(--tt-blue);
+  overflow: hidden;
+}
+
+#britpong-game .score-strip span {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#britpong-game .score-number { font-size: clamp(28px, 4.1vw, 48px); }
+
+#britpong-game .pitch {
+  position: relative;
+  touch-action: none;
+  user-select: none;
+  min-height: 0;
+  background:
+    repeating-linear-gradient(0deg, rgba(0,255,74,.08) 0 22px, transparent 22px 44px),
+    #00150a;
+  box-shadow: inset 0 0 0 5px var(--tt-green), inset 0 0 0 11px #000;
+  overflow: hidden;
+}
+
+#britpong-game .pitch-title {
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  font-size: clamp(15px, 1.9vw, 23px);
+  line-height: .85;
+  z-index: 4;
+}
+
+#britpong-game .centre-line {
+  position: absolute;
+  top: 11px;
+  bottom: 11px;
+  left: 50%;
+  border-left: 5px dotted var(--tt-white);
+  opacity: .7;
+}
+
+#britpong-game .centre-circle {
+  position: absolute;
+  width: clamp(70px, 12vw, 118px);
+  height: clamp(70px, 12vw, 118px);
+  border: 5px solid var(--tt-white);
+  border-radius: 50%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  opacity: .65;
+}
+
+#britpong-game .paddle {
+  position: absolute;
+  width: 2.2%;
+  height: 20%;
+  min-width: 12px;
+  transform: translateY(0);
+  box-shadow: 0 0 0 5px #000;
+  z-index: 5;
+}
+
+#britpong-game .paddle.player { left: 5.8%; background: currentColor; }
+#britpong-game .paddle.cpu { right: 5.8%; background: currentColor; }
+
+#britpong-game .pixel-ball {
+  position: absolute;
+  width: 2.2%;
+  aspect-ratio: 1;
+  min-width: 12px;
+  transform: translate(-50%, -50%);
+  background: var(--tt-yellow);
+  box-shadow: 0 0 0 5px #000;
+  z-index: 6;
+}
+
+#britpong-game .touch-field {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+#britpong-game .serve-prompt {
+  position: absolute;
+  left: 50%;
+  bottom: 14%;
+  transform: translateX(-50%);
+  z-index: 7;
+  background: #000;
+  border: 4px solid var(--tt-yellow);
+  padding: 6px 12px 4px;
+  font-size: clamp(18px, 2.5vw, 30px);
+  line-height: .82;
+  white-space: nowrap;
+}
+
+#britpong-game .commentary-row {
+  min-width: 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  background: #000;
+  padding: 4px 8px;
+  font-size: clamp(17px, 2.1vw, 26px);
+  line-height: .86;
+  overflow: hidden;
+}
+
+#britpong-game .commentary-row span {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#britpong-game .mobile-controls { display: none; }
+
+#britpong-game .result-page {
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 1.6vw, 18px);
+  text-align: center;
+  padding: 1% 0;
+}
+
+#britpong-game .result-card {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: clamp(10px, 1.7vw, 22px);
+  align-items: center;
+  width: 92%;
+  background: #000;
+  border-top: 5px solid var(--tt-green);
+  border-bottom: 5px solid var(--tt-green);
+  padding: 9px;
+  font-size: clamp(29px, 4.3vw, 52px);
+  line-height: .82;
+  overflow: hidden;
+}
+
+#britpong-game .result-card div {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#britpong-game .final-score { font-size: clamp(40px, 6.2vw, 72px); }
+#britpong-game .result-page p { margin: 0; font-size: clamp(18px, 2.35vw, 28px); line-height: .9; max-width: 92%; }
+
+@media (max-width: 760px) {
+  #britpong-game { min-height: 100svh; padding: 8px; background: transparent; }
+  #britpong-game .britpong-shell { width: min(98vw, calc(100svh * 1.28), 680px); border-radius: 14px; padding: 7px; }
+  #britpong-game .teletext-screen {
+    grid-template-rows: 6.2% 10.8% 1fr;
+    gap: .7%;
+    border-radius: 8px;
+    padding: 9px;
+  }
+  #britpong-game .nav-row { display: none; }
+  #britpong-game .content-window { border-top-width: 4px; border-bottom-width: 4px; }
+  #britpong-game .brand-title { font-size: clamp(27px, 7.2vw, 42px); text-align: right; }
+  #britpong-game .bbc-box { width: 27px; height: 24px; font-size: 24px; border-width: 3px; }
+  #britpong-game .status-row { font-size: clamp(13px, 3.5vw, 20px); }
+  #britpong-game .ceefax-h1 { font-size: clamp(31px, 8.5vw, 43px); }
+  #britpong-game .page-kicker { font-size: clamp(17px, 4.5vw, 23px); }
+  #britpong-game .start-page { gap: 5px; }
+  #britpong-game .band-carousel { grid-template-columns: 1fr 1fr; gap: 6px; }
+  #britpong-game .band-card { padding: 6px 4px; box-shadow: inset 0 0 0 3px var(--tt-blue); }
+  #britpong-game .band-card.is-selected { box-shadow: inset 0 0 0 3px var(--tt-yellow), 0 0 0 3px #000; }
+  #britpong-game .band-name { font-size: clamp(24px, 7vw, 35px); }
+  #britpong-game .band-town { font-size: clamp(11px, 3.2vw, 16px); }
+  #britpong-game .band-short { font-size: clamp(11px, 3.1vw, 15px); }
+  #britpong-game .selected-strip {
+    grid-template-columns: auto auto;
+    text-align: center;
+    justify-content: center;
+    gap: 6px 10px;
+    font-size: clamp(16px, 4.3vw, 22px);
+    border-top-width: 3px;
+    border-bottom-width: 3px;
+  }
+  #britpong-game .selected-strip span:last-child { grid-column: 1 / -1; }
+  #britpong-game .mobile-hint { font-size: clamp(11px, 3vw, 15px); }
+  #britpong-game .tele-button { font-size: clamp(16px, 4.2vw, 23px); padding: 8px 10px; box-shadow: 4px 4px 0 #000, inset 0 0 0 3px rgba(0,0,0,.45); }
+  #britpong-game .draw-stage { grid-template-columns: .95fr 1.05fr; gap: 8px; }
+  #britpong-game .draw-ball { width: clamp(34px, 10vw, 48px); height: clamp(34px, 10vw, 48px); font-size: clamp(25px, 7vw, 36px); }
+  #britpong-game .draw-lines { font-size: clamp(20px, 5.8vw, 29px); }
+  #britpong-game .versus { font-size: clamp(31px, 8vw, 42px); }
+  #britpong-game .draw-lines div:not(.versus) { padding: 6px 8px; border-left-width: 5px; }
+  #britpong-game .draw-ticker { font-size: clamp(15px, 3.8vw, 20px); }
+  #britpong-game .draw-ticker.is-ready {
+    grid-template-columns: 1fr auto;
+    gap: 4px 7px;
+    padding: 5px 6px;
+  }
+  #britpong-game .draw-ticker.is-ready > span:first-child { display: none; }
+  #britpong-game .draw-ticker.is-ready strong { font-size: clamp(19px, 5vw, 27px); }
+  #britpong-game .draw-ticker.is-ready > span:last-child { font-size: clamp(13px, 3.3vw, 17px); }
+  #britpong-game .draw-start-button { font-size: clamp(15px, 3.8vw, 19px); padding: 6px 8px; }
+  #britpong-game .rule-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
+  #britpong-game .rule-panel { padding: 6px; box-shadow: inset 0 0 0 3px var(--tt-blue); }
+  #britpong-game .rule-panel h2 { font-size: clamp(19px, 5vw, 25px); }
+  #britpong-game .rule-panel p { font-size: clamp(13px, 3.5vw, 17px); }
+  #britpong-game .score-strip { font-size: clamp(13px, 3.5vw, 20px); gap: 5px; padding: 4px 6px; }
+  #britpong-game .score-number { font-size: clamp(22px, 5.6vw, 31px); }
+  #britpong-game .match-page { grid-template-rows: auto minmax(0, 1fr) auto auto; gap: 5px; }
+  #britpong-game .mobile-controls { display: flex; flex-wrap: nowrap; }
+  #britpong-game .commentary-row { font-size: clamp(13px, 3.5vw, 19px); }
+  #britpong-game .result-card { font-size: clamp(21px, 5.8vw, 31px); }
+  #britpong-game .final-score { font-size: clamp(31px, 8vw, 45px); }
+}
+
+@media (max-width: 520px) {
+  #britpong-game { min-height: 100svh; padding: 4px; background: transparent; }
+  #britpong-game .britpong-shell { width: min(100vw, calc(100svh * 1.3)); border-radius: 10px; padding: 5px; }
+  #britpong-game .teletext-screen { padding: 7px; }
+  #britpong-game .brand-row { gap: 4px; padding: 0 6px; }
+  #britpong-game .brand-title { font-size: clamp(21px, 6.2vw, 31px); }
+  #britpong-game .bbc-box { width: 21px; height: 19px; font-size: 19px; border-width: 2px; }
+  #britpong-game .huge-logo { font-size: clamp(43px, 13vw, 60px); width: 92%; }
+  #britpong-game .line-block { font-size: clamp(20px, 5.8vw, 29px); }
+  #britpong-game .boot-copy { font-size: clamp(13px, 3.6vw, 17px); line-height: .93; }
+  #britpong-game .start-page { grid-template-rows: auto auto minmax(0, 1fr) auto auto auto; gap: 4px; }
+  #britpong-game .band-carousel { gap: 5px; }
+  #britpong-game .band-name { font-size: clamp(21px, 6.6vw, 30px); }
+  #britpong-game .band-town,
+  #britpong-game .band-short { font-size: clamp(10px, 3vw, 13px); }
+  #britpong-game .selected-strip { padding: 3px 6px; }
+  #britpong-game .draw-page { gap: 4px; }
+  #britpong-game .draw-stage { grid-template-columns: 1fr; grid-template-rows: 42% 58%; }
+  #britpong-game .draw-bowl::before { font-size: 15px; }
+  #britpong-game .draw-lines { grid-template-rows: 1fr auto 1fr; font-size: clamp(20px, 6vw, 28px); }
+  #britpong-game .draw-lines div:not(.versus) { gap: 2px; }
+  #britpong-game .rule-grid { grid-template-columns: 1fr; }
+  #britpong-game .rule-panel p { font-size: clamp(12px, 3.2vw, 15px); }
+  #britpong-game .pitch-title { font-size: 14px; }
+  #britpong-game .serve-prompt { font-size: clamp(15px, 4vw, 20px); padding: 5px 8px 3px; border-width: 3px; }
+  #britpong-game .result-page { gap: 9px; }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+  #britpong-game { min-height: 100svh; padding: 3px; }
+  #britpong-game .britpong-shell { width: min(98vw, calc(100svh * 1.33)); border-radius: 10px; padding: 5px; }
+  #britpong-game .teletext-screen { padding: 7px; grid-template-rows: 5.8% 10.2% 1fr; }
+  #britpong-game .nav-row { display: none; }
+  #britpong-game .status-row { font-size: clamp(12px, 2.5vw, 17px); }
+  #britpong-game .brand-title { font-size: clamp(25px, 5.5vw, 36px); }
+  #britpong-game .bbc-box { width: 22px; height: 20px; font-size: 20px; border-width: 2px; }
+  #britpong-game .ceefax-h1 { font-size: clamp(27px, 6vw, 39px); }
+  #britpong-game .page-kicker { font-size: clamp(14px, 3vw, 21px); }
+  #britpong-game .band-name { font-size: clamp(20px, 5vw, 30px); }
+  #britpong-game .band-town,
+  #britpong-game .band-short { font-size: clamp(10px, 2.4vw, 14px); }
+  #britpong-game .selected-strip { font-size: clamp(14px, 3.2vw, 20px); padding: 3px 6px; }
+  #britpong-game .tele-button { font-size: clamp(15px, 3.5vw, 21px); padding: 6px 9px; }
+  #britpong-game .match-page { gap: 4px; }
+  #britpong-game .score-strip { font-size: clamp(12px, 2.8vw, 18px); padding: 3px 6px; }
+  #britpong-game .score-number { font-size: clamp(20px, 4.4vw, 28px); }
+  #britpong-game .commentary-row { font-size: clamp(12px, 2.7vw, 17px); padding: 3px 6px; }
+  #britpong-game .mobile-controls { display: flex; }
+  #britpong-game .serve-prompt { font-size: clamp(14px, 3.2vw, 19px); padding: 4px 7px 3px; border-width: 3px; }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  #britpong-game .pitch { cursor: none; }
+  #britpong-game .band-card,
+  #britpong-game .tele-button {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+</style>
+
+<script>
+(function () {
+  const root = document.getElementById('britpong-game');
+  if (!root || root.dataset.britpongReady === 'true') return;
+  root.dataset.britpongReady = 'true';
+
+  const BANDS = [
+    { name: 'OASIS', town: 'MANCHESTER', short: 'BIG COAT, BIG CHORUS', colour: 'cyan', chant: 'CIGARETTES, CONFIDENCE, LATE TACKLES' },
+    { name: 'BLUR', town: 'COLCHESTER / LONDON', short: 'SUBURBAN COUNTER ATTACK', colour: 'yellow', chant: 'ART SCHOOL PRESS, NEAR POST FINISH' },
+    { name: 'PULP', town: 'SHEFFIELD', short: 'LATE RUN INTO THE BOX', colour: 'green', chant: 'KITCHEN SINK THROUGH BALL' },
+    { name: 'SUEDE', town: 'LONDON', short: 'VELVET DOWN THE LEFT', colour: 'magenta', chant: 'GLAMOUR, DANGER, WIDE PLAY' }
+  ];
+
+  const GAME_W = 720;
+  const GAME_H = 410;
+  const PADDLE_H = 82;
+  const PADDLE_W = 16;
+  const BALL = 12;
+  const WIN_SCORE = 7;
+  const EDGE_MARGIN = 14;
+  const PLAYER_SPEED = 8.6;
+  const CPU_BASE_SPEED = 4.05;
+  const CPU_MAX_SPEED = 6.35;
+  const START_BALL_SPEED = 4.35;
+  const HIT_SPEEDUP = 0.22;
+  const MAX_BALL_SPEED = 7.35;
+  const MAX_BALL_VY = 6.75;
+  const SERVE_Y_SPEED_MIN = 1.15;
+  const SERVE_Y_SPEED_MAX = 3.05;
+
+  let screen = 'boot';
+  let selected = 0;
+  let opponent = null;
+  let result = null;
+  let game = null;
+  let active = false;
+  let clockText = '20:11/55';
+  let cleanup = [];
+  let raf = null;
+  let frame = 0;
+  let keys = { up: false, down: false };
+  let bootIndex = 0;
+  let bootTyped = '';
+  let bootComplete = false;
+  let bootTimer = null;
+
+  const bootText = `CHECKING MEMORY .......... SELECTIVE\nLOADING MANCHESTER RAIN .. OK\nLOADING CAMDEN TRAFFIC ... OK\nLOADING SHEFFIELD NERVES . OK\nLOADING SUEDE VELOUR ..... SKIPPED\nLOADING BIG 4 CUP ........ OK\nMATCH ENGINE ............. READY`;
+
+  function escapeHtml(value) {
+    return String(value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  function colourClass(name) {
+    return `tt-${name || 'white'}`;
+  }
+
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+  }
+
+  function randomServeY() {
+    const speed = Math.random() * (SERVE_Y_SPEED_MAX - SERVE_Y_SPEED_MIN) + SERVE_Y_SPEED_MIN;
+    return speed * (Math.random() > 0.5 ? 1 : -1);
+  }
+
+  function makeInitialGame(player, pickedOpponent) {
+    const serveDirection = Math.random() > 0.5 ? 1 : -1;
+    return {
+      player,
+      opponent: pickedOpponent,
+      playerY: GAME_H / 2 - PADDLE_H / 2,
+      cpuY: GAME_H / 2 - PADDLE_H / 2,
+      cpuAimY: GAME_H / 2 - PADDLE_H / 2,
+      playerVelocity: 0,
+      ballX: GAME_W / 2,
+      ballY: GAME_H / 2,
+      ballVX: START_BALL_SPEED * serveDirection,
+      ballVY: randomServeY(),
+      playerScore: 0,
+      cpuScore: 0,
+      paused: true,
+      rally: 0,
+      lastScorer: 'PRESS SPACE OR TAP KICK OFF',
+      serveTimer: 0
+    };
+  }
+
+  function resetBall(direction, message) {
+    game.ballX = GAME_W / 2;
+    game.ballY = GAME_H / 2;
+    game.ballVX = START_BALL_SPEED * direction;
+    game.ballVY = randomServeY();
+    game.rally = 0;
+    game.paused = true;
+    game.serveTimer = 55;
+    game.cpuAimY = GAME_H / 2 - PADDLE_H / 2;
+    game.lastScorer = `${message} · NEXT SERVE`;
+  }
+
+  function addCleanup(fn) {
+    cleanup.push(fn);
+  }
+
+  function clearCleanup() {
+    cleanup.forEach((fn) => fn());
+    cleanup = [];
+    if (raf) cancelAnimationFrame(raf);
+    raf = null;
+    if (bootTimer) clearInterval(bootTimer);
+    bootTimer = null;
+    keys = { up: false, down: false };
+  }
+
+  function byId(id) {
+    return root.querySelector(`#${id}`);
+  }
+
+  function frameHtml(content, page = '302', title = 'BRITPOPPED SPORT', footer = 'NEWS   SPORT   KICK OFF   302') {
+    return `
+      <div class="britpong-shell">
+        <div class="crt-glass"></div>
+        <div class="teletext-screen">
+          <div class="status-row">
+            <span>P${page}</span>
+            <span>${title}</span>
+            <span>1995</span>
+            <span id="bp-clock">${clockText}</span>
+          </div>
+          <div class="brand-row">
+            <span class="bbc-box">P</span>
+            <span class="bbc-box">O</span>
+            <span class="bbc-box">P</span>
+            <span class="brand-title">BRITPOPPED SPORT</span>
+          </div>
+          <div class="content-window">${content}</div>
+          <div class="nav-row">${footer}</div>
+        </div>
+      </div>
+    `;
+  }
+
+  function updateClock() {
+    const d = new Date();
+    const hh = String(d.getHours()).padStart(2, '0');
+    const mm = String(d.getMinutes()).padStart(2, '0');
+    const ss = String(d.getSeconds()).padStart(2, '0');
+    clockText = `${hh}:${mm}/${ss}`;
+    const clock = root.querySelector('#bp-clock');
+    if (clock) clock.textContent = clockText;
+  }
+
+  setInterval(updateClock, 1000);
+  updateClock();
+
+  root.addEventListener('pointerdown', () => {
+    active = true;
+    root.focus({ preventScroll: true });
+  });
+
+  document.addEventListener('pointerdown', (event) => {
+    if (!root.contains(event.target)) active = false;
+  });
+
+  function setScreen(next) {
+    screen = next;
+    render();
+  }
+
+  function render() {
+    clearCleanup();
+
+    if (screen === 'boot') renderBoot();
+    if (screen === 'start') renderStart();
+    if (screen === 'rules') renderRules();
+    if (screen === 'draw') renderDraw();
+    if (screen === 'game') renderGame();
+    if (screen === 'result') renderResult();
+  }
+
+  function renderBoot() {
+    bootIndex = 0;
+    bootTyped = '';
+    bootComplete = false;
+
+    root.innerHTML = frameHtml(`
+      <div class="boot-grid">
+        <div class="huge-logo tt-yellow">BRITPONG</div>
+        <div class="tt-green line-block">BIG 4 CUP LOADING</div>
+        <pre class="boot-copy"><span id="bp-boot-text"></span><span class="terminal-cursor">█</span></pre>
+        <div id="bp-boot-prompt" class="tt-cyan boot-wait">PLEASE WAIT</div>
+      </div>
+    `, '100', 'BRITPOPPED 1');
+
+    const textEl = root.querySelector('#bp-boot-text');
+    const promptEl = root.querySelector('#bp-boot-prompt');
+
+    function completeBoot() {
+      bootIndex = bootText.length;
+      bootTyped = bootText;
+      bootComplete = true;
+      if (bootTimer) clearInterval(bootTimer);
+      bootTimer = null;
+      textEl.textContent = bootTyped;
+      promptEl.textContent = 'PRESS ANY KEY OR TAP SCREEN';
+      promptEl.className = 'tt-cyan blink';
+    }
+
+    bootTimer = setInterval(() => {
+      bootIndex += 1;
+      bootTyped = bootText.slice(0, bootIndex);
+      textEl.textContent = bootTyped;
+      if (bootIndex >= bootText.length) completeBoot();
+    }, 18);
+
+    const advance = () => {
+      if (!bootComplete) {
+        completeBoot();
+        return;
+      }
+      setScreen('start');
+    };
+
+    const keyHandler = () => advance();
+    const pointerHandler = () => advance();
+
+    document.addEventListener('keydown', keyHandler);
+    root.addEventListener('pointerdown', pointerHandler);
+    addCleanup(() => document.removeEventListener('keydown', keyHandler));
+    addCleanup(() => root.removeEventListener('pointerdown', pointerHandler));
+  }
+
+  function renderStart() {
+    const band = BANDS[selected];
+    const cards = BANDS.map((item, index) => `
+      <button class="band-card ${index === selected ? 'is-selected' : ''}" data-band="${index}">
+        <span class="band-name ${colourClass(item.colour)}">${item.name}</span>
+        <span class="band-town">${item.town}</span>
+        <span class="band-short">${item.short}</span>
+      </button>
+    `).join('');
+
+    root.innerHTML = frameHtml(`
+      <div class="start-page">
+        <div class="page-kicker tt-green">BIG 4 CUP</div>
+        <h1 class="ceefax-h1 tt-yellow">SELECT YOUR SIDE</h1>
+        <div class="band-carousel">${cards}</div>
+        <div class="selected-strip">
+          <span class="tt-white">YOUR BAND</span>
+          <span class="${colourClass(band.colour)}">${band.name}</span>
+          <span class="tt-cyan">${band.chant}</span>
+        </div>
+        <div class="button-row">
+          <button id="bp-kick-off" class="tele-button yellow">KICK OFF</button>
+          <button id="bp-rules" class="tele-button cyan">RULES</button>
+        </div>
+        <div class="mobile-hint tt-white">DESKTOP: ← → ENTER · MOBILE: TAP A BAND · DRAG PADDLE</div>
+      </div>
+    `, '302', 'BRITPOPPED SPORT', '← → SELECT   ENTER KICK OFF   R RULES   302');
+
+    root.querySelectorAll('[data-band]').forEach((button) => {
+      button.addEventListener('click', () => {
+        selected = Number(button.dataset.band);
+        renderStart();
+      });
+    });
+
+    byId('bp-kick-off').addEventListener('click', () => setScreen('draw'));
+    byId('bp-rules').addEventListener('click', () => setScreen('rules'));
+
+    const keyHandler = (event) => {
+      if (!active) return;
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        selected = (selected + BANDS.length - 1) % BANDS.length;
+        renderStart();
+      }
+      if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        selected = (selected + 1) % BANDS.length;
+        renderStart();
+      }
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        setScreen('draw');
+      }
+      if (event.key.toLowerCase() === 'r') setScreen('rules');
+    };
+
+    document.addEventListener('keydown', keyHandler);
+    addCleanup(() => document.removeEventListener('keydown', keyHandler));
+  }
+
+  function renderRules() {
+    root.innerHTML = frameHtml(`
+      <div class="rules-page">
+        <h1 class="ceefax-h1 tt-yellow">HOW TO PLAY</h1>
+        <div class="rule-grid">
+          <div class="rule-panel"><h2 class="tt-green">OBJECTIVE</h2><p>WIN THE BIG 4 CUP SEMI-FINAL. FIRST TO 7 GOALS GOES THROUGH.</p></div>
+          <div class="rule-panel"><h2 class="tt-cyan">DESKTOP</h2><p>MOVE WITH ↑ ↓ OR W S. SPACE STARTS THE RALLY OR PAUSES PLAY.</p></div>
+          <div class="rule-panel"><h2 class="tt-magenta">MOBILE</h2><p>DRAG ON THE PITCH TO MOVE. USE BUTTONS IF YOU PREFER. TAP TO SERVE.</p></div>
+          <div class="rule-panel"><h2 class="tt-yellow">VERY 1995</h2><p>THE BALL IS SMALL. THE CONFIDENCE IS NOT. DO NOT BLAME THE REF.</p></div>
+        </div>
+        <button id="bp-back" class="tele-button yellow wide">BACK TO SELECT</button>
+      </div>
+    `, '303', 'BRITPOPPED SPORT', 'ENTER BACK   ESC MENU   SPORT INDEX 301');
+
+    byId('bp-back').addEventListener('click', () => setScreen('start'));
+
+    const keyHandler = (event) => {
+      if (!active) return;
+      if (event.key === 'Escape' || event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        setScreen('start');
+      }
+    };
+
+    document.addEventListener('keydown', keyHandler);
+    addCleanup(() => document.removeEventListener('keydown', keyHandler));
+  }
+
+  function renderDraw() {
+    const player = BANDS[selected];
+    const eligible = BANDS.filter((band) => band.name !== player.name);
+    let phase = 0;
+    let drawn = null;
+
+    function drawHtml() {
+      const pool = eligible.map((band, index) => `
+        <div class="draw-ball ball-${index} ${phase >= 1 && !drawn ? 'shake' : ''}">${band.name[0]}</div>
+      `).join('');
+
+      const opponentText = drawn ? drawn.name : phase >= 2 ? 'DRAWING...' : 'WAITING';
+      const footer = drawn ? 'SPACE OR ENTER TO START   BIG 4 CUP   302' : 'DRAW LIVE   BIG 4 CUP   SEMI-FINALS   302';
+      const ticker = drawn ? `
+        <span class="tt-green">DRAW CONFIRMED</span>
+        <strong><span class="${colourClass(player.colour)}">${player.name}</span> <span class="tt-yellow">v</span> <span class="${colourClass(drawn.colour)}">${drawn.name}</span></strong>
+        <button id="bp-start-match" class="tele-button yellow draw-start-button">START MATCH</button>
+        <span class="tt-cyan blink">PRESS SPACE / ENTER OR TAP START</span>
+      ` : 'BALLS VERIFIED BY AN ELDERLY MAN IN A BLAZER';
+
+      root.innerHTML = frameHtml(`
+        <div class="draw-page">
+          <div class="page-kicker tt-green">BIG 4 CUP SEMI-FINAL DRAW</div>
+          <h1 class="ceefax-h1 tt-yellow">${drawn ? 'DRAW COMPLETE' : 'DRAW IN PROGRESS'}</h1>
+          <div class="draw-stage">
+            <div class="draw-bowl ${drawn ? 'is-complete' : ''}">${pool}</div>
+            <div class="draw-lines">
+              <div><span class="tt-white">YOUR BAND</span><span class="${colourClass(player.colour)}">${player.name}</span></div>
+              <div class="versus tt-yellow">v</div>
+              <div><span class="tt-white">OPPONENT</span><span class="${drawn ? colourClass(drawn.colour) : 'tt-cyan blink'}">${opponentText}</span></div>
+            </div>
+          </div>
+          <div class="draw-ticker ${drawn ? 'is-ready' : ''}">${ticker}</div>
+        </div>
+      `, '302', 'BRITPOPPED SPORT', footer);
+
+      const startButton = byId('bp-start-match');
+      if (startButton) {
+        startButton.addEventListener('click', () => {
+          opponent = drawn;
+          game = makeInitialGame(player, opponent);
+          setScreen('game');
+        });
+      }
+    }
+
+    drawHtml();
+
+    const timers = [
+      setTimeout(() => { phase = 1; drawHtml(); }, 650),
+      setTimeout(() => { phase = 2; drawHtml(); }, 1400),
+      setTimeout(() => {
+        drawn = eligible[Math.floor(Math.random() * eligible.length)];
+        phase = 3;
+        drawHtml();
+      }, 2450)
+    ];
+
+    timers.forEach((timer) => addCleanup(() => clearTimeout(timer)));
+
+    const keyHandler = (event) => {
+      if (!active || !drawn) return;
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        opponent = drawn;
+        game = makeInitialGame(player, opponent);
+        setScreen('game');
+      }
+    };
+
+    document.addEventListener('keydown', keyHandler);
+    addCleanup(() => document.removeEventListener('keydown', keyHandler));
+  }
+
+  function renderGame() {
+    if (!opponent) setScreen('start');
+    const player = BANDS[selected];
+    if (!game) game = makeInitialGame(player, opponent);
+
+    root.innerHTML = frameHtml(`
+      <div class="match-page">
+        <div class="score-strip">
+          <span id="bp-player-name" class="${colourClass(player.colour)}">${player.name}</span>
+          <span id="bp-player-score" class="tt-white score-number">0</span>
+          <span class="tt-yellow">BIG 4 CUP</span>
+          <span id="bp-cpu-score" class="tt-white score-number">0</span>
+          <span id="bp-cpu-name" class="${colourClass(opponent.colour)}">${opponent.name}</span>
+        </div>
+        <div id="bp-pitch" class="pitch" role="img" aria-label="Britpong match area">
+          <div class="pitch-title tt-green">SEMI-FINAL LIVE</div>
+          <div class="centre-line"></div>
+          <div class="centre-circle"></div>
+          <div id="bp-player-paddle" class="paddle player ${colourClass(player.colour)}"></div>
+          <div id="bp-cpu-paddle" class="paddle cpu ${colourClass(opponent.colour)}"></div>
+          <div id="bp-ball" class="pixel-ball"></div>
+          <div id="bp-serve-prompt" class="serve-prompt tt-yellow blink">TAP / SPACE TO SERVE</div>
+          <div class="touch-field"></div>
+        </div>
+        <div class="commentary-row">
+          <span id="bp-commentary" class="tt-cyan">PRESS SPACE OR TAP KICK OFF</span>
+          <span id="bp-rally" class="tt-white">RALLY 0 · PACE 59</span>
+        </div>
+        <div class="mobile-controls">
+          <button id="bp-up" class="tele-button cyan">UP</button>
+          <button id="bp-serve" class="tele-button yellow">KICK OFF</button>
+          <button id="bp-down" class="tele-button cyan">DOWN</button>
+        </div>
+      </div>
+    `, '302', 'BRITPOPPED SPORT', 'SPACE PAUSE/SERVE   ESC MENU   FIRST TO 7   302');
+
+    const pitch = byId('bp-pitch');
+    const playerPaddle = byId('bp-player-paddle');
+    const cpuPaddle = byId('bp-cpu-paddle');
+    const ball = byId('bp-ball');
+    const playerScore = byId('bp-player-score');
+    const cpuScore = byId('bp-cpu-score');
+    const commentary = byId('bp-commentary');
+    const rally = byId('bp-rally');
+    const prompt = byId('bp-serve-prompt');
+
+    function serve() {
+      game.paused = false;
+      game.serveTimer = 0;
+      game.lastScorer = 'PLAYING';
+      syncGameDom();
+    }
+
+    function movePlayerFromPointer(event) {
+      const rect = pitch.getBoundingClientRect();
+      const y = ((event.clientY - rect.top) / rect.height) * GAME_H - PADDLE_H / 2;
+      game.playerY = clamp(y, EDGE_MARGIN + 2, GAME_H - PADDLE_H - EDGE_MARGIN - 2);
+      syncGameDom();
+    }
+
+    function handlePointerDown(event) {
+      pitch.setPointerCapture?.(event.pointerId);
+      movePlayerFromPointer(event);
+      serve();
+    }
+
+    function handlePointerMove(event) {
+      if (event.buttons || event.pointerType === 'touch') movePlayerFromPointer(event);
+    }
+
+    pitch.addEventListener('pointerdown', handlePointerDown);
+    pitch.addEventListener('pointermove', handlePointerMove);
+    addCleanup(() => pitch.removeEventListener('pointerdown', handlePointerDown));
+    addCleanup(() => pitch.removeEventListener('pointermove', handlePointerMove));
+
+    function holdButton(id, direction) {
+      const button = byId(id);
+      const down = () => { keys[direction] = true; };
+      const up = () => { keys[direction] = false; };
+      button.addEventListener('pointerdown', down);
+      button.addEventListener('pointerup', up);
+      button.addEventListener('pointercancel', up);
+      button.addEventListener('pointerleave', up);
+      addCleanup(() => {
+        button.removeEventListener('pointerdown', down);
+        button.removeEventListener('pointerup', up);
+        button.removeEventListener('pointercancel', up);
+        button.removeEventListener('pointerleave', up);
+      });
+    }
+
+    holdButton('bp-up', 'up');
+    holdButton('bp-down', 'down');
+    byId('bp-serve').addEventListener('click', serve);
+
+    const keyDown = (event) => {
+      if (!active) return;
+      if (['ArrowUp', 'ArrowDown', ' ', 'w', 's', 'W', 'S'].includes(event.key)) event.preventDefault();
+      if (event.key === 'ArrowUp' || event.key.toLowerCase() === 'w') keys.up = true;
+      if (event.key === 'ArrowDown' || event.key.toLowerCase() === 's') keys.down = true;
+      if (event.key === ' ') {
+        game.paused = !game.paused;
+        game.serveTimer = 0;
+        game.lastScorer = game.paused ? 'PAUSED' : 'PLAYING';
+        syncGameDom();
+      }
+      if (event.key === 'Escape') setScreen('start');
+    };
+
+    const keyUp = (event) => {
+      if (event.key === 'ArrowUp' || event.key.toLowerCase() === 'w') keys.up = false;
+      if (event.key === 'ArrowDown' || event.key.toLowerCase() === 's') keys.down = false;
+    };
+
+    document.addEventListener('keydown', keyDown);
+    document.addEventListener('keyup', keyUp);
+    addCleanup(() => document.removeEventListener('keydown', keyDown));
+    addCleanup(() => document.removeEventListener('keyup', keyUp));
+
+    function syncGameDom() {
+      playerPaddle.style.top = `${(game.playerY / GAME_H) * 100}%`;
+      cpuPaddle.style.top = `${(game.cpuY / GAME_H) * 100}%`;
+      ball.style.left = `${(game.ballX / GAME_W) * 100}%`;
+      ball.style.top = `${(game.ballY / GAME_H) * 100}%`;
+      playerScore.textContent = game.playerScore;
+      cpuScore.textContent = game.cpuScore;
+      commentary.textContent = game.lastScorer;
+      rally.textContent = `RALLY ${game.rally} · PACE ${Math.round((Math.abs(game.ballVX) / MAX_BALL_SPEED) * 100)}`;
+      if (game.paused) {
+        prompt.textContent = game.serveTimer > 0 ? 'NEXT SERVE...' : 'TAP / SPACE TO SERVE';
+        prompt.style.display = 'block';
+      } else {
+        prompt.style.display = 'none';
+      }
+    }
+
+    function finish(winner, loser, winnerScore, loserScore) {
+      result = { winner, loser, winnerScore, loserScore };
+      setScreen('result');
+    }
+
+    function loop() {
+      let playerMove = 0;
+      if (keys.up) playerMove -= PLAYER_SPEED;
+      if (keys.down) playerMove += PLAYER_SPEED;
+      game.playerY = clamp(game.playerY + playerMove, EDGE_MARGIN + 2, GAME_H - PADDLE_H - EDGE_MARGIN - 2);
+      game.playerVelocity = playerMove;
+
+      const ballComingToCpu = game.ballVX > 0;
+      if (frame % 15 === 0) {
+        const cpuAhead = Math.max(0, game.cpuScore - game.playerScore);
+        const cpuBehind = Math.max(0, game.playerScore - game.cpuScore);
+        const rallyFocus = Math.min(24, game.rally * 2.2);
+        const errorWindow = clamp(52 - rallyFocus + cpuAhead * 12 - cpuBehind * 7, 16, 66);
+        const centreRest = GAME_H / 2 - PADDLE_H / 2 + Math.sin(frame / 34) * 12;
+        game.cpuAimY = ballComingToCpu
+          ? clamp(game.ballY - PADDLE_H / 2 + (Math.random() - 0.5) * errorWindow, EDGE_MARGIN + 2, GAME_H - PADDLE_H - EDGE_MARGIN - 2)
+          : centreRest;
+      }
+
+      const cpuAhead = Math.max(0, game.cpuScore - game.playerScore);
+      const cpuBehind = Math.max(0, game.playerScore - game.cpuScore);
+      const cpuSpeed = clamp(
+        CPU_BASE_SPEED + Math.min(1.55, game.rally * 0.085) - cpuAhead * 0.24 + cpuBehind * 0.16,
+        3.35,
+        CPU_MAX_SPEED
+      );
+      const cpuDelta = game.cpuAimY - game.cpuY;
+      if (Math.abs(cpuDelta) > 4) game.cpuY += clamp(cpuDelta, -cpuSpeed, cpuSpeed);
+      game.cpuY = clamp(game.cpuY, EDGE_MARGIN + 2, GAME_H - PADDLE_H - EDGE_MARGIN - 2);
+
+      if (game.paused && game.serveTimer > 0) {
+        game.serveTimer -= 1;
+        if (game.serveTimer <= 0) {
+          game.paused = false;
+          game.lastScorer = 'PLAYING';
+        }
+      }
+
+      if (!game.paused) {
+        game.ballX += game.ballVX;
+        game.ballY += game.ballVY;
+
+        if (game.ballY <= EDGE_MARGIN || game.ballY >= GAME_H - BALL - EDGE_MARGIN) {
+          game.ballVY *= -1;
+          game.ballY = clamp(game.ballY, EDGE_MARGIN, GAME_H - BALL - EDGE_MARGIN);
+        }
+
+        const playerHit =
+          game.ballX <= 42 + PADDLE_W &&
+          game.ballX >= 42 - BALL &&
+          game.ballY + BALL >= game.playerY &&
+          game.ballY <= game.playerY + PADDLE_H;
+
+        if (playerHit && game.ballVX < 0) {
+          const rel = clamp((game.ballY + BALL / 2 - (game.playerY + PADDLE_H / 2)) / (PADDLE_H / 2), -1, 1);
+          const paddleEnglish = game.playerVelocity / PLAYER_SPEED;
+          game.ballVX = clamp(Math.abs(game.ballVX) + HIT_SPEEDUP, START_BALL_SPEED, MAX_BALL_SPEED);
+          game.ballVY = clamp(rel * 6.25 + paddleEnglish * 1.55, -MAX_BALL_VY, MAX_BALL_VY);
+          if (Math.abs(game.ballVY) < 1.05) game.ballVY = (rel >= 0 ? 1 : -1) * 1.05;
+          game.ballX = 42 + PADDLE_W + 1;
+          game.rally += 1;
+          game.lastScorer = `${player.name} RETURN`;
+        }
+
+        const cpuHit =
+          game.ballX + BALL >= GAME_W - 42 - PADDLE_W &&
+          game.ballX <= GAME_W - 42 &&
+          game.ballY + BALL >= game.cpuY &&
+          game.ballY <= game.cpuY + PADDLE_H;
+
+        if (cpuHit && game.ballVX > 0) {
+          const rel = clamp((game.ballY + BALL / 2 - (game.cpuY + PADDLE_H / 2)) / (PADDLE_H / 2), -1, 1);
+          game.ballVX = -clamp(Math.abs(game.ballVX) + HIT_SPEEDUP, START_BALL_SPEED, MAX_BALL_SPEED);
+          game.ballVY = clamp(rel * 5.65 + (Math.random() - 0.5) * 0.9, -MAX_BALL_VY, MAX_BALL_VY);
+          if (Math.abs(game.ballVY) < 1.0) game.ballVY = (rel >= 0 ? 1 : -1) * 1.0;
+          game.ballX = GAME_W - 42 - PADDLE_W - BALL - 1;
+          game.rally += 1;
+          game.lastScorer = `${opponent.name} DIGS IT OUT`;
+        }
+
+        if (game.ballX < -BALL) {
+          game.cpuScore += 1;
+          if (game.cpuScore >= WIN_SCORE) {
+            finish(opponent, player, game.cpuScore, game.playerScore);
+            return;
+          }
+          resetBall(-1, `${opponent.name} GOAL`);
+        }
+
+        if (game.ballX > GAME_W + BALL) {
+          game.playerScore += 1;
+          if (game.playerScore >= WIN_SCORE) {
+            finish(player, opponent, game.playerScore, game.cpuScore);
+            return;
+          }
+          resetBall(1, `${player.name} GOAL`);
+        }
+      }
+
+      frame += 1;
+      syncGameDom();
+      raf = requestAnimationFrame(loop);
+    }
+
+    syncGameDom();
+    raf = requestAnimationFrame(loop);
+  }
+
+  function renderResult() {
+    const winner = result?.winner || BANDS[selected];
+    const loser = result?.loser || opponent || BANDS[(selected + 1) % BANDS.length];
+    const final = `${result?.winnerScore || 0}-${result?.loserScore || 0}`;
+
+    root.innerHTML = frameHtml(`
+      <div class="result-page">
+        <div class="page-kicker tt-green">FULL TIME</div>
+        <h1 class="ceefax-h1 tt-yellow">${winner.name} WIN</h1>
+        <div class="result-card">
+          <div class="${colourClass(winner.colour)}">${winner.name}</div>
+          <div class="tt-white final-score">${final}</div>
+          <div class="${colourClass(loser.colour)}">${loser.name}</div>
+        </div>
+        <p class="tt-cyan">THE FINAL WILL BE PLAYED LATER, PROBABLY AFTER TOP OF THE POPS.</p>
+        <button id="bp-play-again" class="tele-button yellow wide">PLAY AGAIN</button>
+      </div>
+    `, '305', 'BRITPOPPED SPORT', 'ENTER PLAY AGAIN   SPORT 302   INDEX 100');
+
+    byId('bp-play-again').addEventListener('click', () => {
+      opponent = null;
+      result = null;
+      game = null;
+      setScreen('start');
+    });
+
+    const keyHandler = (event) => {
+      if (!active) return;
+      if (event.key === 'Enter' || event.key === ' ') {
+        opponent = null;
+        result = null;
+        game = null;
+        setScreen('start');
+      }
+    };
+
+    document.addEventListener('keydown', keyHandler);
+    addCleanup(() => document.removeEventListener('keydown', keyHandler));
+  }
+
+  render();
+})();
+</script>
