@@ -87,23 +87,13 @@ body {
   overflow: hidden;
   background:
     linear-gradient(rgba(255,255,255,.035) 50%, rgba(0,0,0,.06) 50%) 0 0 / 100% 4px,
-    radial-gradient(circle at 50% 45%, rgba(0, 62, 255, .16), transparent 60%),
     var(--tt-black);
-  box-shadow:
-    inset 0 0 0 3px #000,
-    inset 0 0 55px rgba(0, 80, 255, .28);
-  text-shadow: 0 0 3px currentColor;
+  box-shadow: inset 0 0 0 3px #000;
+  text-shadow: none;
 }
 
 #britpong-game .crt-glass {
-  position: absolute;
-  inset: 12px;
-  border-radius: 18px;
-  pointer-events: none;
-  z-index: 10;
-  background: radial-gradient(circle at 50% 35%, rgba(255,255,255,.15), transparent 16%, transparent 58%, rgba(0,0,0,.16));
-  mix-blend-mode: screen;
-  opacity: .32;
+  display: none;
 }
 
 #britpong-game .status-row,
