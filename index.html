@@ -42,7 +42,7 @@ body {
   overflow: hidden;
   display: grid;
   place-items: center;
-  padding: 4px;
+  padding: 0;
   background: transparent;
   color: var(--tt-white);
   font-family: 'VT323', 'Courier New', monospace;
@@ -62,10 +62,10 @@ body {
 
 #britpong-game .britpong-shell {
   position: relative;
-  width: min(99vw, calc(100svh * 1.32), 1100px);
+  width: min(100vw, calc(100svh * 1.333), 1400px);
   aspect-ratio: 4 / 3;
-  padding: clamp(6px, .9vw, 12px);
-  border-radius: 22px;
+  padding: clamp(5px, .75vw, 10px);
+  border-radius: 18px;
   background:
     linear-gradient(145deg, #2d2d31, #09090d 50%, #34343a),
     #111;
@@ -82,7 +82,7 @@ body {
   display: grid;
   grid-template-rows: 6.2% 11.6% 1fr 6.4%;
   gap: .8%;
-  padding: clamp(10px, 1.35vw, 18px);
+  padding: clamp(8px, 1vw, 15px);
   border-radius: 15px;
   overflow: hidden;
   background:
@@ -764,8 +764,8 @@ body {
 #britpong-game .result-page p { margin: 0; font-size: clamp(18px, 2.35vw, 28px); line-height: .9; max-width: 92%; }
 
 @media (max-width: 760px) {
-  #britpong-game { height: 100vh; height: 100svh; min-height: 0; padding: 3px; background: transparent; overflow: hidden; }
-  #britpong-game .britpong-shell { width: min(99vw, calc(100svh * 1.32), 760px); border-radius: 12px; padding: 5px; }
+  #britpong-game { height: 100vh; height: 100svh; min-height: 0; padding: 0; background: transparent; overflow: hidden; }
+  #britpong-game .britpong-shell { width: min(100vw, calc(100svh * 1.333), 900px); border-radius: 10px; padding: 4px; }
   #britpong-game .teletext-screen {
     grid-template-rows: 6.2% 10.8% 1fr;
     gap: .7%;
@@ -827,8 +827,8 @@ body {
 }
 
 @media (max-width: 520px) {
-  #britpong-game { height: 100vh; height: 100svh; min-height: 0; padding: 2px; background: transparent; overflow: hidden; }
-  #britpong-game .britpong-shell { width: min(100vw, calc(100svh * 1.33)); border-radius: 8px; padding: 4px; }
+  #britpong-game { height: 100vh; height: 100svh; min-height: 0; padding: 0; background: transparent; overflow: hidden; }
+  #britpong-game .britpong-shell { width: min(100vw, calc(100svh * 1.333)); border-radius: 6px; padding: 3px; }
   #britpong-game .teletext-screen { padding: 7px; }
   #britpong-game .brand-row { gap: 4px; padding: 0 6px; }
   #britpong-game .brand-title { font-size: clamp(21px, 6.2vw, 31px); }
@@ -855,8 +855,8 @@ body {
 }
 
 @media (orientation: landscape) and (max-height: 520px) {
-  #britpong-game { height: 100vh; height: 100svh; min-height: 0; padding: 2px; overflow: hidden; }
-  #britpong-game .britpong-shell { width: min(100vw, calc(100svh * 1.33)); border-radius: 8px; padding: 4px; }
+  #britpong-game { height: 100vh; height: 100svh; min-height: 0; padding: 0; overflow: hidden; }
+  #britpong-game .britpong-shell { width: min(100vw, calc(100svh * 1.333)); border-radius: 6px; padding: 3px; }
   #britpong-game .teletext-screen { padding: 7px; grid-template-rows: 5.8% 10.2% 1fr; }
   #britpong-game .nav-row { display: none; }
   #britpong-game .status-row { font-size: clamp(12px, 2.5vw, 17px); }
